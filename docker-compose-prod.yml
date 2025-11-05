@@ -6,7 +6,8 @@
 # ===============================================================
 
 # Utilisation des champs d'extension (x-*) pour une meilleure organisation
-x-traefik-host-rule: &traefik-host-rule "Host(`${FRONTEND_DOMAIN}`) || Host(`${WWW_FRONTEND_DOMAIN}`)"
+# NOTE: WWW_FRONTEND_DOMAIN retiré temporairement pour réduire le nombre de certificats Let's Encrypt pendant les tests
+x-traefik-host-rule: &traefik-host-rule "Host(`${FRONTEND_DOMAIN}`)"
 
 # Labels Traefik spécifiques pour le service frontend
 x-traefik-frontend-labels: &traefik-frontend-labels
@@ -34,13 +35,13 @@ x-traefik-backend-labels: &traefik-backend-labels
   # --- Définition du middleware pour ce service ---
   "traefik.http.middlewares.${TRAEFIK_SERVICE_PREFIX:-tariff}-api-stripprefix.stripprefix.prefixes": "/api"
   # --- Routeur HTTPS pour le backend ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.rule": "(Host(`${FRONTEND_DOMAIN}`) || Host(`${WWW_FRONTEND_DOMAIN}`)) && PathPrefix(`/api`)"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.rule": "Host(`${FRONTEND_DOMAIN}`) && PathPrefix(`/api`)"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.entrypoints": "websecure"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.tls.certresolver": "myresolver"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.middlewares": "${TRAEFIK_SERVICE_PREFIX:-tariff}-api-stripprefix"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.service": "backend"
   # --- Routeur HTTP pour la redirection vers HTTPS ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.rule": "(Host(`${FRONTEND_DOMAIN}`) || Host(`${WWW_FRONTEND_DOMAIN}`)) && PathPrefix(`/api`)"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.rule": "Host(`${FRONTEND_DOMAIN}`) && PathPrefix(`/api`)"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.entrypoints": "web"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.middlewares": "https-redirect" # Utilise le middleware global
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.service": "backend"

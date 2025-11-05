@@ -157,7 +157,6 @@ services:
     command:
       - start
       - --import-realm
-    
     depends_on:
       keycloak-db:
         condition: service_healthy

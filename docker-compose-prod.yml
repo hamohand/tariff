@@ -13,17 +13,17 @@ x-traefik-frontend-labels: &traefik-frontend-labels
   traefik.enable: "true"
   traefik.docker.network: "${TRAEFIK_NETWORK:-webproxy}"
   # --- Routeur HTTPS pour le frontend ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend-secure.rule": *traefik-host-rule
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend-secure.entrypoints": "websecure"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend-secure.tls.certresolver": "myresolver"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-secure.rule": *traefik-host-rule
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-secure.entrypoints": "websecure"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-secure.tls.certresolver": "myresolver"
     # --- LIAISON EXPLICITE ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend-secure.service": "${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-secure.service": "${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend"
   # --- Routeur HTTP pour la redirection vers HTTPS ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend-http.rule": *traefik-host-rule
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend-http.entrypoints": "web"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend-http.middlewares": "https-redirect"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-http.rule": *traefik-host-rule
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-http.entrypoints": "web"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-http.middlewares": "https-redirect"
   # --- Service pointant vers le conteneur frontend ---
-  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-hscode}-frontend.loadbalancer.server.port": "80"
+  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend.loadbalancer.server.port": "80"
 
 ########### BACKEND #############
 # Labels Traefik spécifiques pour le service backend (exposé sur /api)
@@ -31,20 +31,20 @@ x-traefik-backend-labels: &traefik-backend-labels
   traefik.enable: "true"
   traefik.docker.network: "${TRAEFIK_NETWORK:-webproxy}"
   # --- Définition du middleware pour ce service ---
-  "traefik.http.middlewares.${TRAEFIK_SERVICE_PREFIX:-hscode}-api-stripprefix.stripprefix.prefixes": "/api"
+  "traefik.http.middlewares.${TRAEFIK_SERVICE_PREFIX:-tariff}-api-stripprefix.stripprefix.prefixes": "/api"
   # --- Routeur HTTPS pour le backend ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-secure.rule": "(Host(`${FRONTEND_DOMAIN}`) || Host(`${WWW_FRONTEND_DOMAIN}`)) && PathPrefix(`/api`)"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-secure.entrypoints": "websecure"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-secure.tls.certresolver": "myresolver"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-secure.middlewares": "${TRAEFIK_SERVICE_PREFIX:-hscode}-api-stripprefix"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-secure.service": "${TRAEFIK_SERVICE_PREFIX:-hscode}-backend"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.rule": "(Host(`${FRONTEND_DOMAIN}`) || Host(`${WWW_FRONTEND_DOMAIN}`)) && PathPrefix(`/api`)"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.entrypoints": "websecure"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.tls.certresolver": "myresolver"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.middlewares": "${TRAEFIK_SERVICE_PREFIX:-tariff}-api-stripprefix"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.service": "${TRAEFIK_SERVICE_PREFIX:-tariff}-backend"
   # --- Routeur HTTP pour la redirection vers HTTPS ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-http.rule": "(Host(`${FRONTEND_DOMAIN}`) || Host(`${WWW_FRONTEND_DOMAIN}`)) && PathPrefix(`/api`)"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-http.entrypoints": "web"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-http.middlewares": "https-redirect" # Utilise le middleware global
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend-http.service": "${TRAEFIK_SERVICE_PREFIX:-hscode}-backend"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.rule": "(Host(`${FRONTEND_DOMAIN}`) || Host(`${WWW_FRONTEND_DOMAIN}`)) && PathPrefix(`/api`)"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.entrypoints": "web"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.middlewares": "https-redirect" # Utilise le middleware global
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.service": "${TRAEFIK_SERVICE_PREFIX:-tariff}-backend"
   # --- Service pointant vers le conteneur backend ---
-  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-hscode}-backend.loadbalancer.server.port": "8081"
+  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend.loadbalancer.server.port": "8081"
 
 ########### KEYCLOAK #############
 # Labels Traefik spécifiques pour le service Keycloak
@@ -52,16 +52,16 @@ x-traefik-keycloak-labels: &traefik-keycloak-labels
   traefik.enable: "true"
   traefik.docker.network: "${TRAEFIK_NETWORK:-webproxy}"
   # --- Routeur HTTPS pour Keycloak ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak-secure.rule": "Host(`${KC_HOSTNAME}`)"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak-secure.entrypoints": "websecure"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak-secure.tls.certresolver": "myresolver"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak-secure.service": "${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.rule": "Host(`${KC_HOSTNAME}`)"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.entrypoints": "websecure"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.tls.certresolver": "myresolver"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.service": "${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak"
   # --- Routeur HTTP pour la redirection vers HTTPS ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak-http.rule": "Host(`${KC_HOSTNAME}`)"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak-http.entrypoints": "web"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak-http.middlewares": "https-redirect"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-http.rule": "Host(`${KC_HOSTNAME}`)"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-http.entrypoints": "web"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-http.middlewares": "https-redirect"
   # --- Service pointant vers le conteneur Keycloak ---
-  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-hscode}-keycloak.loadbalancer.server.port": "8080"
+  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak.loadbalancer.server.port": "8080"
 
 # /////////////////////////////////////
 # Ancres YAML pour factoriser les variables communes
@@ -151,9 +151,7 @@ services:
     labels:
       <<: *traefik-keycloak-labels
     volumes:
-      - ./keycloak/realm-export.json.template:/opt/keycloak/data/import/realm-export.json.template
-      - ./keycloak/entrypoint.sh:/opt/keycloak/entrypoint.sh
-    entrypoint: ["/bin/sh", "/opt/keycloak/entrypoint.sh"]
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     command:
       - start
       - --import-realm

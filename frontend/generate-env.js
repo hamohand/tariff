@@ -4,7 +4,7 @@ const path = require('path');
 console.log('🔧 Génération de la configuration d\'environnement Angular...\n');
 
 // Récupération des variables d'environnement avec valeurs par défaut
-const keycloakRealm = process.env.KEYCLOAK_REALM || 'hscode-realm';
+const keycloakRealm = process.env.KEYCLOAK_REALM || 'tariff-realm';
 const keycloakClient = process.env.KEYCLOAK_FRONTEND_CLIENT || 'frontend-client';
 const keycloakUrl = process.env.KEYCLOAK_EXTERNAL_URL || 'http://localhost:8080';
 const apiUrl = process.env.API_URL || '/api';

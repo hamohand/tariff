@@ -1,5 +1,5 @@
 {
-  "realm": "hscode-realm",
+  "realm": "tariff-realm",
   "displayName": "",
   "displayNameHtml": "",
   "notBefore": 0,
@@ -788,12 +788,12 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "https://${FRONTEND_DOMAIN}/*",
-        "https://${WWW_FRONTEND_DOMAIN}/*"
+        "https://tariff.enclume-numerique.com/*",
+        "https://www.tariff.enclume-numerique.com/*"
       ],
       "webOrigins": [
-        "https://${FRONTEND_DOMAIN}",
-        "https://${WWW_FRONTEND_DOMAIN}"
+        "https://tariff.enclume-numerique.com/*",
+        "https://www.tariff.enclume-numerique.com/*"
       ],
       "notBefore": 0,
       "bearerOnly": false,

@@ -17,13 +17,14 @@ x-traefik-frontend-labels: &traefik-frontend-labels
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-secure.entrypoints": "websecure"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-secure.tls.certresolver": "myresolver"
     # --- LIAISON EXPLICITE ---
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-secure.service": "${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-secure.service": "frontend"
   # --- Routeur HTTP pour la redirection vers HTTPS ---
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-http.rule": *traefik-host-rule
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-http.entrypoints": "web"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-http.middlewares": "https-redirect"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend-http.service": "frontend"
   # --- Service pointant vers le conteneur frontend ---
-  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-tariff}-frontend.loadbalancer.server.port": "80"
+  "traefik.http.services.frontend.loadbalancer.server.port": "80"
 
 ########### BACKEND #############
 # Labels Traefik spécifiques pour le service backend (exposé sur /api)
@@ -37,14 +38,14 @@ x-traefik-backend-labels: &traefik-backend-labels
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.entrypoints": "websecure"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.tls.certresolver": "myresolver"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.middlewares": "${TRAEFIK_SERVICE_PREFIX:-tariff}-api-stripprefix"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.service": "${TRAEFIK_SERVICE_PREFIX:-tariff}-backend"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-secure.service": "backend"
   # --- Routeur HTTP pour la redirection vers HTTPS ---
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.rule": "(Host(`${FRONTEND_DOMAIN}`) || Host(`${WWW_FRONTEND_DOMAIN}`)) && PathPrefix(`/api`)"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.entrypoints": "web"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.middlewares": "https-redirect" # Utilise le middleware global
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.service": "${TRAEFIK_SERVICE_PREFIX:-tariff}-backend"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend-http.service": "backend"
   # --- Service pointant vers le conteneur backend ---
-  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-tariff}-backend.loadbalancer.server.port": "8081"
+  "traefik.http.services.backend.loadbalancer.server.port": "8081"
 
 ########### KEYCLOAK #############
 # Labels Traefik spécifiques pour le service Keycloak
@@ -55,13 +56,14 @@ x-traefik-keycloak-labels: &traefik-keycloak-labels
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.rule": "Host(`${KC_HOSTNAME}`)"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.entrypoints": "websecure"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.tls.certresolver": "myresolver"
-  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.service": "${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-secure.service": "keycloak"
   # --- Routeur HTTP pour la redirection vers HTTPS ---
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-http.rule": "Host(`${KC_HOSTNAME}`)"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-http.entrypoints": "web"
   "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-http.middlewares": "https-redirect"
+  "traefik.http.routers.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak-http.service": "keycloak"
   # --- Service pointant vers le conteneur Keycloak ---
-  "traefik.http.services.${TRAEFIK_SERVICE_PREFIX:-tariff}-keycloak.loadbalancer.server.port": "8080"
+  "traefik.http.services.keycloak.loadbalancer.server.port": "8080"
 
 # /////////////////////////////////////
 # Ancres YAML pour factoriser les variables communes

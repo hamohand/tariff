@@ -256,6 +256,6 @@ volumes:
 # RÉSEAUX
 # ===============================================================
 networks:
-  ${TRAEFIK_NETWORK:-webproxy}:
+  webproxy:
     external: true
   default:

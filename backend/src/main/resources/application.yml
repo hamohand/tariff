@@ -45,14 +45,16 @@ resilience4j:
 # ===================================================
 # CONFIGURATION KEYCLOAK ADMIN CLIENT
 # ===================================================
+# NOTE: En production, toutes les variables doivent être définies explicitement
+# Les valeurs par défaut sont uniquement dans le profil 'dev'
 keycloak:
   admin:
     server-url: ${KEYCLOAK_INTERNAL_URL:-http://keycloak:8080}
-    realm: ${KEYCLOAK_REALM:-hscode-realm}
-    client-id: ${KEYCLOAK_BACKEND_CLIENT:-backend-client}
-    client-secret: ${KEYCLOAK_BACKEND_CLIENT_SECRET:-backend-secret-keycloak-251017}
+    realm: ${KEYCLOAK_REALM}
+    client-id: ${KEYCLOAK_BACKEND_CLIENT}
+    client-secret: ${KEYCLOAK_BACKEND_CLIENT_SECRET}
   registration:
-    realm: ${KEYCLOAK_REALM:hscode-realm}
+    realm: ${KEYCLOAK_REALM}
 
 
 # ===================================================
@@ -95,6 +97,15 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+# Valeurs par défaut pour le développement local uniquement
+keycloak:
+  admin:
+    realm: ${KEYCLOAK_REALM:-hscode-realm}
+    client-id: ${KEYCLOAK_BACKEND_CLIENT:-backend-client}
+    client-secret: ${KEYCLOAK_BACKEND_CLIENT_SECRET:-backend-secret-keycloak-251017}
+  registration:
+    realm: ${KEYCLOAK_REALM:-hscode-realm}
 
 logging:
   level:
